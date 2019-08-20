@@ -1,0 +1,160 @@
+﻿    <html>
+    <head>
+        <link href="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/taskpane2.css" rel="stylesheet" type="text/css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
+        <script src="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/sortEmail_Read.js" type="text/javascript"></script>
+
+        <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script language="javascript" type="text/javascript">
+            $(function () {
+                $(".preload").fadeOut(2000, function () {
+                    $(".content").fadeIn(1000);
+                });
+            });
+        </script>
+        <script>
+             function sortEmails() {
+                var table, tr, td, cell, i, j;
+
+                table = document.getElementById("emailTable");
+                tr = table.getElementsByTagName("tr");
+
+
+                for (i = 0; i < tr.length; i++) {
+                    // Hide the row initially.
+                    tr[i].style.display = "none";
+
+                    td = tr[i].getElementsByTagName("td");
+
+
+                    for (var j = 0; j < td.length; j++) {
+                        cell = tr[i].getElementsByTagName("td")[j];
+                        if (cell) {
+                            for (var k = 0; k < emails.length; k++) {
+                                if (cell.innerHTML.indexOf(emails[k]) > -1) {
+                                    tr[i].style.display = "";
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            var _Item;
+
+            var emails = new Array();
+
+            Office.initialize = function () {
+                _Item = Office.context.mailbox.item;
+
+                // Checks for the DOM to load using the jQuery ready function.
+                $(document).ready(function () {
+                    // After the DOM is loaded, app-specific code can run.
+
+                    getAllRecipients();
+
+                    sortEmails();
+
+
+                });
+
+            }
+
+            // Get the email addresses of all the recipients of the composed item.
+            function getAllRecipients() {
+                //document.write(JSON.stringify(item));
+                var toRecipients, ccRecipients, bccRecipients, sender2;
+                // Verify if the composed item is an appointment or message.
+
+
+                if (_Item.itemType == Office.MailboxEnums.ItemType.Appointment) {
+                    toRecipients = item.requiredAttendees;
+                    ccRecipients = item.optionalAttendees;
+                }
+                else {
+                    toRecipients = _Item.to;
+                    ccRecipients = _Item.cc;
+                    bccRecipients = _Item.bcc;
+                    sender2 = _Item.sender;
+
+                    //document.write(JSON.stringify(sender2));
+
+
+
+                }
+
+
+                displayAddresses(toRecipients);
+                if (ccRecipients) { displayAddresses(ccRecipients) };
+                if (bccRecipients) { displayAddresses(bccRecipients) };
+                displaySender(sender2);
+
+
+            }
+            function displaySender(asyncResult) {
+
+                write(asyncResult.emailAddress);
+
+            }
+
+            // Recipients are in an array of EmailAddressDetails
+            // objects passed in asyncResult.value.
+            function displayAddresses(asyncResult) {
+
+                for (var i = 0; i < asyncResult.length; i++) {
+                    //document.write(JSON.stringify(asyncResult[i].emailAddress));
+                    write(asyncResult[i].emailAddress);
+                }
+            }
+
+            // push to 'emails' array
+            function write(message) {
+
+                emails.push(message);
+
+            }
+        </script>
+    </head>
+    <body>
+
+        <div><h2 id="emptyEmails" style="text-align:center;"></h2></div>
+        <div class="preload"><img src="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/Ntrinsx-Logo-80x80.png"></div>
+        <table id="emailTable" class="content"></table>
+
+        <script>
+            $(document).ready(function () {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        myFunction(this);
+                    }
+                };
+                xmlhttp.open("GET", "https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/convertcsv.xml", true);
+                xmlhttp.send();
+            });
+
+            function myFunction(xml) {
+                var i;
+                var xmlDoc = xml.responseXML;
+                var table = "<tr><th>Name</th><th>Email</th><th>Color</th></tr>";
+                var x = xmlDoc.getElementsByTagName("row");
+                for (i = 0; i < x.length; i++)
+                {
+                    table += "<tr><td>" +
+                        x[i].getElementsByTagName("Name")[0].childNodes[0].nodeValue +
+                        "</td><td>" +
+                        x[i].getElementsByTagName("Email")[0].childNodes[0].nodeValue +
+                        "</td><td>" +
+                        x[i].getElementsByTagName("colornum")[0].childNodes[0].nodeValue +
+                        "</td></tr>";
+                }
+
+                document.getElementById("emailTable").innerHTML = table;
+            }
+        </script>
+
+    </body>
+    </html>
