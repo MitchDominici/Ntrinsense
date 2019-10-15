@@ -3,8 +3,9 @@
     "",
     "\\assets",
     "\\src",
+    "\\src\\commands",
     "\\src\\taskpane"
   ],
-  "SelectedNode": "\\src\\taskpane\\taskpane (2).html",
+  "SelectedNode": "\\manifest.xml",
   "PreviewInSolutionExplorer": false
 }

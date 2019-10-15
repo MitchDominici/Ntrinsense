@@ -6,8 +6,8 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="NtrinSense"/>
   <Description DefaultValue="Display your coworkers at-work Ntrinsx colors."/>
-  <IconUrl DefaultValue="https://s3.us-east-2.amazonaws.com/testing-outlook-add-in/icon-32.png"/>
-  <HighResolutionIconUrl DefaultValue="https://s3.us-east-2.amazonaws.com/testing-outlook-add-in/icon-80.png"/>
+  <IconUrl DefaultValue="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/Ntrinsx-Logo-32x32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/Ntrinsx-Logo-80x80.png"/>
   <SupportUrl DefaultValue="https://s3.us-east-2.amazonaws.com/testing-outlook-add-in/support.html"/>
   <AppDomains>
     <AppDomain>contoso.com</AppDomain>
@@ -75,21 +75,7 @@
                     <SourceLocation resid="Taskpane.Url"/>
                   </Action>
                 </Control>
-                <Control xsi:type="Button" id="ActionButton">
-                  <Label resid="ActionButton.Label"/>
-                  <Supertip>
-                    <Title resid="ActionButton.Label"/>
-                    <Description resid="ActionButton.Tooltip"/>
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="Icon.16x16"/>
-                    <bt:Image size="32" resid="Icon.32x32"/>
-                    <bt:Image size="80" resid="Icon.80x80"/>
-                  </Icon>
-                  <Action xsi:type="ExecuteFunction">
-                    <FunctionName>action</FunctionName>
-                  </Action>
-                </Control>
+               
               </Group>
             </OfficeTab>
           </ExtensionPoint>
@@ -109,24 +95,10 @@
                     <bt:Image size="80" resid="Icon.80x80"/>
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
-                    <SourceLocation resid="Taskpane2.Url"/>
+                    <SourceLocation resid="Taskpane_Compose.Url"/>
                   </Action>
                 </Control>
-                <Control xsi:type="Button" id="ActionButton1">
-                  <Label resid="ActionButton.Label"/>
-                  <Supertip>
-                    <Title resid="ActionButton.Label"/>
-                    <Description resid="ActionButton.Tooltip"/>
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="Icon.16x16"/>
-                    <bt:Image size="32" resid="Icon.32x32"/>
-                    <bt:Image size="80" resid="Icon.80x80"/>
-                  </Icon>
-                  <Action xsi:type="ExecuteFunction">
-                    <FunctionName>action</FunctionName>
-                  </Action>
-                </Control>
+               
               </Group>
             </OfficeTab>
           </ExtensionPoint>
@@ -135,23 +107,23 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://s3.us-east-2.amazonaws.com/testing-outlook-add-in/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://s3.us-east-2.amazonaws.com/testing-outlook-add-in/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://s3.us-east-2.amazonaws.com/testing-outlook-add-in/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/Ntrinsx-Logo-16x16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/Ntrinsx-Logo-32x32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/Ntrinsx-Logo-80x80.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Commands.Url" DefaultValue="https://s3.us-east-2.amazonaws.com/testing-outlook-add-in/commands.html"/>
         <bt:Url id="Taskpane.Url" DefaultValue="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/taskpane_Read.html"/>
-        <bt:Url id="Taskpane2.Url" DefaultValue="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/taskpane_Compose.html"/>
+        <bt:Url id="Taskpane_Compose.Url" DefaultValue="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/taskpane_Compose.html"/>
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GroupLabel" DefaultValue="Contoso Add-in"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Show Taskpane"/>
-        <bt:String id="ActionButton.Label" DefaultValue="Perform an action"/>
+        <bt:String id="GroupLabel" DefaultValue="NtrinSense"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Show colors"/>
+
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens a pane displaying all available properties."/>
-        <bt:String id="ActionButton.Tooltip" DefaultValue="Perform an action when clicked."/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens a pane displaying At-Work Ntrinsx colors for available emails."/>
+  
       </bt:LongStrings>
     </Resources>  
     </VersionOverrides>

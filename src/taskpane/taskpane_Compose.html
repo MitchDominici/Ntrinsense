@@ -4,153 +4,169 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
     <script src="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/sortEmail.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script language="javascript" type="text/javascript">
+       
+       //Fade logo out while loading
         $(function () {
             $(".preload").fadeOut(2000, function () {
-                $(".content").fadeIn(1000);
+                $(".content").fadeIn(500);
             });
         });
+
+        $(function () {
+            $(ItemChanged).toRecipients(function () {
+                $(sortEmails());
+            });
+
+        });
+            
+        
     </script>
-    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-    
-       <script>
-           function sortEmails() {
-               var table, tr, td, cell, i, j;
 
-               table = document.getElementById("emailTable");
-               tr = table.getElementsByTagName("tr");
+   
 
+    <script>
+        function sortEmails() {
+            var table, tr, td, cell, i, j;
 
-               for (i = 0; i < tr.length; i++) {
-                   // Hide the row initially.
-                   tr[i].style.display = "none";
-
-                   td = tr[i].getElementsByTagName("td");
+            table = document.getElementById("emailTable");
+            tr = table.getElementsByTagName("tr");
 
 
-                   for (var j = 0; j < td.length; j++) {
-                       cell = tr[i].getElementsByTagName("td")[j];
-                       if (cell) {
-                           for (var k = 0; k < emails.length; k++) {
-                               if (cell.innerHTML.indexOf(emails[k]) > -1) {
-                                   tr[i].style.display = "";
-                                   break;
-                               }
-                           }
-                       }
+            for (i = 0; i < tr.length; i++) {
+                // Hide the row initially.
+                tr[i].style.display = "none";
 
-                   }
-               }
-           }
+                td = tr[i].getElementsByTagName("td");
 
-           var item;
 
-           var emails = new Array();
+                for (var j = 0; j < td.length; j++) {
+                    cell = tr[i].getElementsByTagName("td")[j];
+                    if (cell) {
+                        for (var k = 0; k < emails.length; k++) {
+                            if (cell.innerHTML.indexOf(emails[k]) > -1) {
+                                tr[i].style.display = "";
+                                break;
+                            }
+                        }
+                    }
 
-           Office.initialize = function () {
-               item = Office.context.mailbox.item;
-               // Checks for the DOM to load using the jQuery ready function.
-               $(document).ready(function () {
-                   // After the DOM is loaded, app-specific code can run.
-                   // Get all the recipients of the composed item.
-                   getAllRecipients();
-                   sortEmails();
-                   noEmails();
+                }
+            }
+        }
 
-               });
-           }
+        var item;
 
-           // Get the email addresses of all the recipients of the composed item.
-           function getAllRecipients() {
-               // Local objects to point to recipients of either
-               // the appointment or message that is being composed.
-               // bccRecipients applies to only messages, not appointments.
-               var toRecipients, ccRecipients, bccRecipients;
-               // Verify if the composed item is an appointment or message.
-               if (item.itemType == Office.MailboxEnums.ItemType.Appointment) {
-                   toRecipients = item.requiredAttendees;
-                   ccRecipients = item.optionalAttendees;
-               } else {
-                   toRecipients = item.to;
-                   ccRecipients = item.cc;
-                   bccRecipients = item.bcc;
-               }
+        var emails = new Array();
 
-               // Use asynchronous method getAsync to get each type of recipients
-               // of the composed item. Each time, this example passes an anonymous
-               // callback function that doesn't take any parameters.
-               toRecipients.getAsync(function (asyncResult) {
-                   if (asyncResult.status == Office.AsyncResultStatus.Failed)
-                   {
-                       write(asyncResult.error.message);
-                   }
-                   else
-                   {
-                       // Async call to get to-recipients of the item completed.
-                       // Display the email addresses of the to-recipients.
+        Office.initialize = function () {
+            item = Office.context.mailbox.item;
+            // Checks for the DOM to load using the jQuery ready function.
+            $(document).ready(function () {
+                // After the DOM is loaded, app-specific code can run.
+                // Get all the recipients of the composed item.
+                getAllRecipients();
+                sortEmails();
+                noEmails();
 
-                       displayAddresses(asyncResult);
-                   }
-               }); // End getAsync for to-recipients.
+            });
+            
+        }
 
-               // Get any cc-recipients.
-               ccRecipients.getAsync(function (asyncResult) {
-                   if (asyncResult.status == Office.AsyncResultStatus.Failed) {
-                       write(asyncResult.error.message);
-                   } else {
-                       // Async call to get cc-recipients of the item completed.
-                       // Display the email addresses of the cc-recipients.
+        // Get the email addresses of all the recipients of the composed item.
+        function getAllRecipients() {
+            // Local objects to point to recipients of either
+            // the appointment or message that is being composed.
+            // bccRecipients applies to only messages, not appointments.
+            var toRecipients, ccRecipients, bccRecipients;
+            // Verify if the composed item is an appointment or message.
+            if (item.itemType == Office.MailboxEnums.ItemType.Appointment) {
+                toRecipients = item.requiredAttendees;
+                ccRecipients = item.optionalAttendees;
+            } else {
+                toRecipients = item.to;
+                ccRecipients = item.cc;
+                bccRecipients = item.bcc;
 
-                       displayAddresses(asyncResult);
-                   }
-               }); // End getAsync for cc-recipients.
+                
+            }
 
-               // If the item has the bcc field, i.e., item is message,
-               // get any bcc-recipients.
-               if (bccRecipients) {
-                   bccRecipients.getAsync(function (asyncResult) {
-                       if (asyncResult.status == Office.AsyncResultStatus.Failed) {
-                           write(asyncResult.error.message);
-                       } else {
-                           // Async call to get bcc-recipients of the item completed.
-                           // Display the email addresses of the bcc-recipients.
+            // Use asynchronous method getAsync to get each type of recipients
+            // of the composed item. Each time, this example passes an anonymous
+            // callback function that doesn't take any parameters.
+            toRecipients.getAsync(function (asyncResult) {
+                if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+                    write(asyncResult.error.message);
+                }
+                else {
+                    // Async call to get to-recipients of the item completed.
+                    // Display the email addresses of the to-recipients.
 
-                           displayAddresses(asyncResult);
-                       }
+                    displayAddresses(asyncResult);
+                }
+            }); // End getAsync for to-recipients.
 
-                   }); // End getAsync for bcc-recipients.
-               }
-           }
+            // Get any cc-recipients.
+            ccRecipients.getAsync(function (asyncResult) {
+                if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+                    write(asyncResult.error.message);
+                } else {
+                    // Async call to get cc-recipients of the item completed.
+                    // Display the email addresses of the cc-recipients.
 
-           // Recipients are in an array of EmailAddressDetails
-           // objects passed in asyncResult.value.
-           function displayAddresses(asyncResult) {
-               for (var i = 0; i < asyncResult.value.length; i++)
-                   write(asyncResult.value[i].emailAddress);
-           }
+                    displayAddresses(asyncResult);
+                }
+            }); // End getAsync for cc-recipients.
 
-           // Writes to a div with id='message' on the page.
-           function write(message) {
-               emails.push(message);
-           }
+            // If the item has the bcc field, i.e., item is message,
+            // get any bcc-recipients.
+            if (bccRecipients) {
+                bccRecipients.getAsync(function (asyncResult) {
+                    if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+                        write(asyncResult.error.message);
+                    } else {
+                        // Async call to get bcc-recipients of the item completed.
+                        // Display the email addresses of the bcc-recipients.
 
-           function noEmails() {
-               if (emails.length == 0) {
-                   document.getElementById("emptyEmails").innerHTML = "Add email addresses to see colors!";
-               }
-           }
+                        displayAddresses(asyncResult);
+                    }
 
-       </script>
-    
+                }); // End getAsync for bcc-recipients.
+            }
+        }
+
+        // Recipients are in an array of EmailAddressDetails
+        // objects passed in asyncResult.value.
+        function displayAddresses(asyncResult) {
+            for (var i = 0; i < asyncResult.value.length; i++)
+                write(asyncResult.value[i].emailAddress);
+        }
+
+        // Writes to a div with id='message' on the page.
+        function write(message) {
+            emails.push(message);
+        }
+
+        function noEmails() {
+            if (emails.length == 0) {
+                document.getElementById("emptyEmails").innerHTML = "Add email addresses to see colors!";
+            }
+        }
+
+    </script>
+
+
 </head>
 <body>
 
     <div><h2 id="emptyEmails" style="text-align:center;"></h2></div>
     <div class="preload"><img src="https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/Ntrinsx-Logo-80x80.png"></div>
+    <div>
     <table id="emailTable" class="content"></table>
-
-
-
+    </div>
     <script>
         $(document).ready(function () {
             var xmlhttp = new XMLHttpRequest();
@@ -159,7 +175,7 @@
                     myFunction(this);
                 }
             };
-            xmlhttp.open("GET", "https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/convertcsv.xml", true);
+            xmlhttp.open("GET", "https://testing-outlook-add-in.s3.us-east-2.amazonaws.com/colorList.xml", true);
             xmlhttp.send();
         });
 
@@ -169,16 +185,21 @@
             var table = "<tr><th>Name</th><th>Email</th><th>Color</th></tr>";
             var x = xmlDoc.getElementsByTagName("row");
             for (i = 0; i < x.length; i++) {
-                table += "<tr><td>" +
+                table += "<tr id=\"columnRow\"><td id=\"Name\">" +
                     x[i].getElementsByTagName("Name")[0].childNodes[0].nodeValue +
-                    "</td><td>" +
+                    "</td><td id=\"Email\">" +
                     x[i].getElementsByTagName("Email")[0].childNodes[0].nodeValue +
-                    "</td><td>" +
+                    "</td><td id=\"Color\" class=\"Color\">" +
                     x[i].getElementsByTagName("colornum")[0].childNodes[0].nodeValue +
                     "</td></tr>";
             }
 
             document.getElementById("emailTable").innerHTML = table;
+        }
+        function UpdateEmail() {
+            item.toRecipients.ItemChanged(function () {
+                sortEmails();
+            });
         }
     </script>
 
